@@ -1,5 +1,21 @@
-var db_address = "http://19.125.84.126:5984/atr-login";
-var db = new PouchDB(db_address);
+var db_address = "http://128.30.25.154:5984/atr-login";
+var db;
+var uid;
+var testString;
+var uidToKerberos;
+
+function init() {
+    testString = document.getElementById("test");
+    db = new PouchDB(db_address);
+    console.log(db);
+    db.get('uid-to-kerberos map').then(function(doc) {
+        console.log(doc);
+        uidToKerberos = doc;
+        startChangeListener();
+    }).catch(function(err) {
+        console.log(err);
+    });
+}
 
 //// listen for changes to the database ////
 function startChangeListener() {
@@ -10,44 +26,16 @@ function startChangeListener() {
         live: true,
         include_docs: true
     }).on('change', function(change) {
+        console.log(change);
         if (change.deleted) {
             // document was deleted - nothing important
         } else {
-            if (change.doc.type == "route") {
-                var mes = change.doc.message;
-                // var id = change.id;
-                // console.log("id: "+id);
-                // var user_id = id.split("user:")[1];
-                console.log("route added/modified - updated " + change.id);
-                // console.log("message " + mes);
-                // console.log("for the user: " + user_id);
-                // console.log("my user id: " + loginInfo.uid);
-
-                if (loginInfo.uid == change.id.split("user:")[1]) {
-                    if (mes == "assigned") {
-                        console.log("driver assigned");
-
-                    } else if (mes == "arrival") {
-                        console.log("driver arrived");
-                        driverArrivedEvent();
-
-                    } else if (mes == "pickup") {
-                        console.log("driver picked up");
-
-                    } else if (mes == "dropoff") {
-                        console.log("driver dropped up");
-                        passengerDropoffEvent();
-
-                    }
-                }
-            } else if (change.id == "white" || change.id == "white_latlon" ||
-                change.id == "red" || change.id == "red_latlon" ||
-                change.id == "blue" || change.id == "blue_latlon") {
-                console.log("updated " + change.id + " vehicle");
-                console.log(change.doc);
-                updateVehicleIconPosition(change.doc);
-            } else {
-                console.log("other update: " + change.id + " vehicle");
+            if (change.doc._id == "current_id") {
+                uid = change.doc.uid;
+                console.log("uid: " + uid.toString());
+                showUid(uid.toString());
+            } else if (change.doc._id == "uid-to-kerberos map") {
+                uidToKerberos = change.doc;
             }
         }
     }).on('error', function(err) {
@@ -59,3 +47,27 @@ function startChangeListener() {
     });
 }
 /////////////////////////////////////////////
+
+function showUid(idString) {
+    if (uidToKerberos[idString]) {
+        testString.innerHTML = "Welcome " + uidToKerberos[idString] + "<br/> " + idString;
+    } else {
+        testString.innerHTML = "Uknown ID <br/>  " + idString;
+    }
+}
+
+function setUidToKerberos(username) {
+    db.get('uid-to-kerberos map').then(function(doc) {
+        doc[uid.toString()] = username;
+        uidToKerberos = doc;
+        db.put(doc).then(function(response) {
+            // handle response
+            console.log('updated db with new username');
+        }).catch(function(err) {
+            console.log(err);
+        });
+    }).catch(function(err) {
+        console.log(err);
+    });
+
+}
