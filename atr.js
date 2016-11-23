@@ -16,7 +16,7 @@ function init() {
     activitiesButtons = document.getElementById('activities-list');
     selectedList = document.getElementById('selected-list');
 
-    testString = document.getElementById("test");
+    testString = document.getElementById("title-text");
     db = new PouchDB(db_address);
     console.log(db);
     db.get('uid-to-kerberos map').then(function(doc) {
