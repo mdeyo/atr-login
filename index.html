@@ -6,15 +6,32 @@
 	<script src="libs/pouchdb/pouchdb-6.0.7.min.js"></script>
 	<link rel="stylesheet" href="atr.css" />
 	<script src="atr.js"></script>
-
 </head>
 
 <body onload="init()">
-	<h2 id="test">Initialized</h2>
+	<div id="header">
+		<img src="images/logo.png" id="header-icon" height="100" width="120" />
+		<h2 id="title-text">Initialized: <br/>Tap ID or enter kerberos</h2>
+		<button id="sim-scan-button" onclick="simScan()">Simulate Scan</button>
+	</div>
+	<div id="coverup"></div>
 
 	<div id="main">
-		<div id="button-list"></div>
-		<div id="selected-list">
+		<div id="category-column" class="myColumn">
+			<h4 class="column-title">Categories</h4>
+			<div id="button-list" class="myList"></div>
+		</div>
+		<div id="category-column" class="myColumn">
+			<h4 class="column-title">Activities</h4>
+			<div id="activities-list" class="myList"></div>
+		</div>
+		<div id="category-column" class="myColumn">
+			<h4 class="column-title">My Activities</h4>
+			<div id="selected-list" class="myList"></div>
+		</div>
+
+		<div id="submit-div" class="myColumn">
+			<button id="submit-button" class="myButton" onclick="submitActivities()">Submit</button>
 		</div>
 	</div>
 </body>

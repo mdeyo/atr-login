@@ -3,14 +3,17 @@ var db;
 var uid;
 var testString;
 var uidToKerberos;
+var username = "None";
 
 var tapingTestObject = {
     'Taping': ['Ankle', 'Elbow/wrist', 'Foot/toe', 'Hand/finger', 'Hip', 'Knee', 'Shoulder'],
-    "Active Warmup": ["Bike", "Treadmill", "UBE", "Elliptical"]
+    "Active Warmup": ["Bike", "Treadmill", "UBE", "Elliptical"],
+    "Time with Athletic Trainer": ['Consultation', 'Evaluation', 'Re-evaluation', 'Gait training', 'HEP (Designed)']
 };
 
 function init() {
-    activitiesButtons = document.getElementById('button-list');
+    categoryButtons = document.getElementById('button-list');
+    activitiesButtons = document.getElementById('activities-list');
     selectedList = document.getElementById('selected-list');
 
     testString = document.getElementById("test");
@@ -45,6 +48,7 @@ function startChangeListener() {
                 showUid(uid.toString());
             } else if (change.doc._id == "uid-to-kerberos map") {
                 uidToKerberos = change.doc;
+                showUid(uid.toString());
             }
         }
     }).on('error', function(err) {
@@ -59,10 +63,30 @@ function startChangeListener() {
 
 function showUid(idString) {
     if (uidToKerberos[idString]) {
-        testString.innerHTML = "Welcome " + uidToKerberos[idString] + "<br/> " + idString;
+        username = uidToKerberos[idString];
+        testString.innerHTML = "Welcome " + username + "<br/> " + idString;
+        showButtons();
     } else {
-        testString.innerHTML = "Uknown ID <br/>  " + idString;
+        testString.innerHTML = "Unknown ID <br/>  " + idString;
+        showRegister();
     }
+}
+
+function simScan() {
+    showButtons();
+}
+
+function showRegister() {
+    var username = prompt("Please enter your kerberos username:");
+    setUidToKerberos(username);
+}
+
+function showButtons() {
+    document.getElementById('coverup').style.display = 'none';
+}
+
+function hideButtons() {
+    document.getElementById('coverup').style.display = 'block';
 }
 
 function setUidToKerberos(username) {
@@ -80,20 +104,20 @@ function setUidToKerberos(username) {
     });
 }
 
-var activitiesButtons, selectedList;
+var categoryButtons, activitiesButtons, selectedList;
 
 function initializeButtons() {
-    activitiesButtons.innerHTML = "";
+    categoryButtons.innerHTML = "";
     var newActivityButton;
     for (i in tapingTestObject) {
         newActivityButton = null;
         newActivityButton = document.createElement("button");
         newActivityButton.innerHTML = i;
-        newActivityButton.className += "myButton";
+        newActivityButton.className += "myButton categoryButton";
         newActivityButton.addEventListener("click", function() {
             updateActivityButtons(this.innerHTML);
         });
-        activitiesButtons.appendChild(newActivityButton);
+        categoryButtons.appendChild(newActivityButton);
     }
 }
 
@@ -105,7 +129,7 @@ function updateActivityButtons(category) {
         newActivityButton = document.createElement("button");
         newActivityButton.innerHTML = tapingTestObject[category][i];
         newActivityButton.message = category + " - " + tapingTestObject[category][i];
-        newActivityButton.className += "myButton";
+        newActivityButton.className += "myButton activityButton";
         newActivityButton.addEventListener("click", function() {
             addActivityToLogin(this.message);
         });
@@ -114,16 +138,18 @@ function updateActivityButtons(category) {
 }
 
 function addActivityToLogin(activity) {
-    console.log("added " + activity);
-    initializeButtons()
-    var newActivityButton = document.createElement("button");
-    newActivityButton.innerHTML = activity;
-    newActivityButton.className += "myButton";
-    newActivityButton.addEventListener("click", function() {
-        console.log("clicked on " + activity);
-        clickOnSelectedActivity(this);
-    });
-    selectedList.appendChild(newActivityButton);
+    if (noRepition(activity)) {
+        console.log("added " + activity);
+        initializeButtons()
+        var newActivityButton = document.createElement("button");
+        newActivityButton.innerHTML = activity;
+        newActivityButton.className += "myButton";
+        newActivityButton.addEventListener("click", function() {
+            console.log("clicked on " + activity);
+            clickOnSelectedActivity(this);
+        });
+        selectedList.appendChild(newActivityButton);
+    }
 }
 
 
@@ -135,5 +161,49 @@ function clickOnSelectedActivity(button) {
     } else {
         // Do nothing!
     }
+}
 
+function noRepition(name) {
+    var value = true;
+    for (i in selectedList.children) {
+        selection = selectedList.children[i];
+        if (typeof(selection) == "object") {
+            if (selection.innerHTML == name) {
+                value = false;
+                break;
+            }
+        }
+    }
+    return value;
+}
+
+function submitActivities() {
+    var newLoginObj = {};
+    var selection;
+    var message = "user: " + username + ", activities: ";
+    var selectedArray = [];
+    for (i in selectedList.children) {
+        selection = selectedList.children[i];
+        if (typeof(selection) == "object") {
+            console.log(selection.innerHTML);
+            selectedArray.push(selection.innerHTML);
+        }
+    }
+    var d = new Date();
+    var timestamp = d.toLocaleString();
+    newLoginObj['_id'] = timestamp + " - " + username;
+    newLoginObj.username = username;
+    newLoginObj.timestamp = timestamp;
+    newLoginObj.activities = selectedArray;
+    console.log(message + selectedArray.toString());
+
+    db.put(newLoginObj).then(function(response) {
+        // handle response
+        console.log('saved doc!');
+        alert(message + selectedArray.toString());
+        selectedList.innerHTML = "";
+        hideButtons();
+    }).catch(function(err) {
+        console.log(err);
+    });
 }
