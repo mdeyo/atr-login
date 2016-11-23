@@ -4,7 +4,15 @@ var uid;
 var testString;
 var uidToKerberos;
 
+var tapingTestObject = {
+    'Taping': ['Ankle', 'Elbow/wrist', 'Foot/toe', 'Hand/finger', 'Hip', 'Knee', 'Shoulder'],
+    "Active Warmup": ["Bike", "Treadmill", "UBE", "Elliptical"]
+};
+
 function init() {
+    activitiesButtons = document.getElementById('button-list');
+    selectedList = document.getElementById('selected-list');
+
     testString = document.getElementById("test");
     db = new PouchDB(db_address);
     console.log(db);
@@ -15,6 +23,7 @@ function init() {
     }).catch(function(err) {
         console.log(err);
     });
+    initializeButtons();
 }
 
 //// listen for changes to the database ////
@@ -69,5 +78,62 @@ function setUidToKerberos(username) {
     }).catch(function(err) {
         console.log(err);
     });
+}
+
+var activitiesButtons, selectedList;
+
+function initializeButtons() {
+    activitiesButtons.innerHTML = "";
+    var newActivityButton;
+    for (i in tapingTestObject) {
+        newActivityButton = null;
+        newActivityButton = document.createElement("button");
+        newActivityButton.innerHTML = i;
+        newActivityButton.className += "myButton";
+        newActivityButton.addEventListener("click", function() {
+            updateActivityButtons(this.innerHTML);
+        });
+        activitiesButtons.appendChild(newActivityButton);
+    }
+}
+
+function updateActivityButtons(category) {
+    console.log(category);
+    activitiesButtons.innerHTML = "";
+    var newActivityButton;
+    for (i in tapingTestObject[category]) {
+        newActivityButton = document.createElement("button");
+        newActivityButton.innerHTML = tapingTestObject[category][i];
+        newActivityButton.message = category + " - " + tapingTestObject[category][i];
+        newActivityButton.className += "myButton";
+        newActivityButton.addEventListener("click", function() {
+            addActivityToLogin(this.message);
+        });
+        activitiesButtons.appendChild(newActivityButton);
+    }
+}
+
+function addActivityToLogin(activity) {
+    console.log("added " + activity);
+    initializeButtons()
+    var newActivityButton = document.createElement("button");
+    newActivityButton.innerHTML = activity;
+    newActivityButton.className += "myButton";
+    newActivityButton.addEventListener("click", function() {
+        console.log("clicked on " + activity);
+        clickOnSelectedActivity(this);
+    });
+    selectedList.appendChild(newActivityButton);
+}
+
+
+function clickOnSelectedActivity(button) {
+    console.log(button);
+    if (confirm('Are you sure you want to remove ' + button.innerHTML + '?')) {
+        // Save it!
+        button.parentNode.removeChild(button);
+    } else {
+        // Do nothing!
+    }
 
 }
