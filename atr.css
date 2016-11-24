@@ -21,6 +21,7 @@ margin-left: 20px;
 }
 
 #coverup{
+  z-index: 10;
   position: absolute;
   top: 100px;
   width: 100%;
@@ -29,15 +30,16 @@ margin-left: 20px;
 }
 
 #main{
-  display: inline-flex;
+  /*display: inline-flex;*/
   height: 80%;
-  margin: 0 5% 0 5%;
-  width: 90%;
+  margin: 0 2% 0 2%;
+  width: 96%;
 }
 
 .myColumn{
   height: 400px;
   width: 25%;
+  float: left;
 }
 
 .myList{
@@ -49,8 +51,19 @@ margin-left: 20px;
   text-align: center;
 }
 
+#arrow-icon{
+  margin: auto;
+  display: none;
+  top: calc(50% - 48px);
+  height: 96px;
+  position: relative;
+}
 #submit-button{
-margin-top: 42%;
+  margin: auto;
+  display: none;
+  /*top: calc(50% - 40px);*/
+  position: relative;
+  margin-top: 10px;
 }
 
 .myButton{

@@ -4,6 +4,7 @@ var uid;
 var testString;
 var uidToKerberos;
 var username = "None";
+var arrowIcon, submitButton, selectedTitle;
 
 var tapingTestObject = {
     'Taping': ['Ankle', 'Elbow/wrist', 'Foot/toe', 'Hand/finger', 'Hip', 'Knee', 'Shoulder'],
@@ -15,6 +16,12 @@ function init() {
     categoryButtons = document.getElementById('button-list');
     activitiesButtons = document.getElementById('activities-list');
     selectedList = document.getElementById('selected-list');
+    arrowIcon = document.getElementById('arrow-icon');
+    submitButton = document.getElementById('submit-button');
+    selectedTitle = document.getElementById('selected-title');
+
+    selectedTitle.style.display = "none";
+    selectedList.style.display = "none";
 
     testString = document.getElementById("title-text");
     db = new PouchDB(db_address);
@@ -149,6 +156,11 @@ function addActivityToLogin(activity) {
             clickOnSelectedActivity(this);
         });
         selectedList.appendChild(newActivityButton);
+
+        arrowIcon.style.display = "block";
+        submitButton.style.display = "block";
+        selectedTitle.style.display = "block";
+        selectedList.style.display = "block";
     }
 }
 

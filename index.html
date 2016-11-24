@@ -21,17 +21,24 @@
 			<h4 class="column-title">Categories</h4>
 			<div id="button-list" class="myList"></div>
 		</div>
-		<div id="category-column" class="myColumn">
+		<div id="activity-column" class="myColumn">
 			<h4 class="column-title">Activities</h4>
 			<div id="activities-list" class="myList"></div>
 		</div>
-		<div id="category-column" class="myColumn">
-			<h4 class="column-title">My Activities</h4>
-			<div id="selected-list" class="myList"></div>
+		<div id="arrow-column" class="myColumn">
+			<img src="images/arrow-right.png" id="arrow-icon" height="96" width="128" />
+
 		</div>
 
-		<div id="submit-div" class="myColumn">
+		<div id="selected-column" class="myColumn">
+			<h4 class="column-title" id="selected-title">My Activities</h4>
+			<div id="selected-list" class="myList" style="height: calc(100% - 150px);"></div>
 			<button id="submit-button" class="myButton" onclick="submitActivities()">Submit</button>
+
 		</div>
+
+		<!-- <div id="submit-div" class="myColumn">
+			<button id="submit-button" class="myButton" onclick="submitActivities()">Submit</button>
+		</div> -->
 	</div>
 </body>
