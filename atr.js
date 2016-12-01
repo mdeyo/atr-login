@@ -8,8 +8,17 @@ var arrowIcon, submitButton, selectedTitle;
 
 var tapingTestObject = {
     'Taping': ['Ankle', 'Elbow/wrist', 'Foot/toe', 'Hand/finger', 'Hip', 'Knee', 'Shoulder'],
+    "Ice and Compression": ['Ice Bag/Ice Massage', 'Cold whirlpool', 'Compression Pump (Normatec)', 'Compression Sleeve', 'Game ready'],
+    "Time with Athletic Trainer": ['Consultation', 'Evaluation', 'Re-evaluation', 'Gait training', 'HEP (Designed)'],
     "Active Warmup": ["Bike", "Treadmill", "UBE", "Elliptical"],
-    "Time with Athletic Trainer": ['Consultation', 'Evaluation', 'Re-evaluation', 'Gait training', 'HEP (Designed)']
+    "Stretching": ['Back', "Lower Leg", 'Elbow/wrist', 'Hip/thigh', 'Shoulder'],
+    "Exercises": ['Therapeutic Exercise', 'Aquatic Therapeutic Exercise', 'Foam Roller / Stick Roller', 'Foor Roler / Golf Ball'],
+    "Pyhsical Therapy": ['Physical Therapy Evaluation', 'Joint Mobilization', 'Manual Therapy', 'Massage / Myofascial Release', 'Moist Heat Pack', 'Neuromuscular re-education'],
+    "Equipment Issued": ['Crutches', 'Splint/Brace', 'Boot'],
+    "Medical Treatment": ['Traction (Mechanical)', 'Wound Care', 'Burn Care', 'Medication', 'Debridement'],
+    "Special Equipment": ['Ultrasound', 'Phonophoresis', 'Electrical Stimulation'],
+    "Testing": ['Functional screening', 'imPACT testing', 'Pyhsical Performance Test'],
+    "Others": ["Mob self (Roll,Stick,Ball)", 'Mob soft tissue instrument', 'Padding', 'ROM - Lower Extremity', 'ROM - Upper Extremity']
 };
 
 function init() {
